@@ -1,0 +1,29 @@
+{
+    "name": "kbase-ui-plugin-widget-iframe-contigset-widget",
+    "version": "0.1.0",
+    "keywords": [
+        "util",
+        "functional",
+        "server",
+        "client",
+        "browser"
+    ],
+    "author": "KBase",
+    "license": "SEE LICENSE IN LICENSE.md",
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/eapearson/kbase-ui-plugin-widget-iframe-paired-end-library-widget"
+    },
+    "contributors": [
+        "eapearson"
+    ],
+    "dependencies": {
+        "node-static": "0.7.7",
+        "bluebird": "3.3.4",
+        "open": "0.0.3",
+        "js-yaml": "3.4.3",
+        "path-exists": "2.1.0"
+    },
+    "devDependencies": {
+    }
+}

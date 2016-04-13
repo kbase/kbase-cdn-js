@@ -1,0 +1,32 @@
+## Demo Plugin for Screencast
+---
+package:
+    author: Erik Pearson
+    name: widget-iframe-demo
+    description: A plugin installing a route, menu definition, and widgets implementing a widget iframe demo
+    date: March 25, 2016
+    version: 0.1.0
+source:
+    modules: []
+install:    
+    widgets:
+        -
+            module: plugins/widget-iframe-demo/modules/panel
+            # we use 'wid' for this plugin in the namespace
+            id: kb_wid_panel
+            type: factory
+#        -
+#            module: plugins/shockbrowser/modules/browser
+#            id: kb_shockbrowser_browser
+#            type: factory
+    routes:
+        -
+            path: [wid]
+            widget: kb_wid_panel
+    menu:
+        -
+            name: wid
+            definition:
+                path: wid
+                label: Widget iFrame Demo
+                icon: file

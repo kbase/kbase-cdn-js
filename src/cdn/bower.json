@@ -1,0 +1,57 @@
+{
+    "name": "kbase-cdn",
+    "description": "A plugin exemplifying a kbase data widget implemented as an iframe",
+    "author": [
+        "kbase"
+    ],
+    "keywords": [
+        "kbase",
+        "ui",
+        "plugin",
+        "widget",
+        "demo"
+    ],
+    "moduleType": "kbase-ui-plugin",
+    "main": "src/plugin/config.yml",
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/eapearson/kbase-cdn"
+    },
+    "dependencies": {
+        "bluebird": "3.3.4",
+        "bootstrap": "3.3.0",
+        "d3": "3.5.16",
+        "datatables": "1.10.10",
+        "datatables-bootstrap3-plugin": "0.4.0",
+        "font-awesome": "4.3.0",
+        "handlebars": "4.0.5",
+        "highlightjs": "9.2.0",
+        "jquery": "2.2.2",
+        "js-yaml": "3.3.1",
+        "knockout": "3.4.0",
+        "numeral": "1.5.3",
+        "nunjucks": "2.4.1",
+        "plotly": "plotly/plotly.js#1.5.1",
+        "pure-uuid": "eapearson/pure-uuid#1.1.1",
+
+
+        "requirejs": "2.2.0",
+        "require-css": "0.1.8",
+        "requirejs-json": "0.0.3",
+        "requirejs-text": "2.0.14",
+        "require-yaml": "0.1.2",
+
+
+        "underscore": "1.8.3",
+
+        "kbase-common-js": "1.5.3",
+        "kbase-ui-widget": "1.0.7",
+        "kbase-service-clients-js": "1.2.4"
+    },
+    "devDependencies": {
+    },
+    "ignore": [
+        ".gitignore"
+    ],
+    "license": "SEE LICENSE IN LICENSE.md"
+}
