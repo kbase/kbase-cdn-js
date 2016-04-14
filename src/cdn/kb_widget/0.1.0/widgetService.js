@@ -13,6 +13,8 @@ define([
                 cdnUrl: cdnUrl
             });
 
+        // NB: For prototyping we supply this widget db in code.
+        // This is modeling a service which provides widget lookup.
         var widgetPackages = [
             {
                 name: 'widgets',
@@ -42,9 +44,12 @@ define([
                                 fileName: 'pairedEndLibrary.js',
                                 amdName: 'pairedEndLibrary',
                                 input: {
-                                    objectRef: {
-                                        required: true
-                                    }
+                                    objects: {
+                                        objectRef: {
+                                            required: true
+                                        }
+                                    },
+                                    options: {}
                                 }
                             },
                             {
@@ -52,9 +57,12 @@ define([
                                 fileName: 'contigSet.js',
                                 amdName: 'contigSet',
                                 input: {
-                                    objectRef: {
-                                        required: true
-                                    }
+                                    objects: {
+                                        objectRef: {
+                                            required: true
+                                        }
+                                    },
+                                    options: {}
                                 }
                             },
                             {
@@ -62,8 +70,10 @@ define([
                                 fileName: 'genomeCompairson.js',
                                 amdName: 'genomeComparison',
                                 input: {
-                                    objectRef: {
-                                        required: true
+                                    objects: {
+                                        objectRef: {
+                                            required: true
+                                        }
                                     }
                                 }
                             }
