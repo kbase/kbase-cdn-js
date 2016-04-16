@@ -124,7 +124,11 @@ bower:
             files: ['**']
     -
         name: kbase-service-clients-js
-        versions: [1.2.4, 1.3.0, 1.4.0]
+        # for now using the cdn branch from my account.
+        # it is tracked with master as far as the logical version, but uses
+        # cdn-style module paths.
+        package: eapearson/kbase-service-clients-js
+        versions: [{bower: 'cdn', cdn: '1.4.0'}]
         install: 
             method: custom
             startPath: dist/kb/service
