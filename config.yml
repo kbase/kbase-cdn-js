@@ -2,3 +2,4 @@
 ---
 server:
     port: 10001
+    root: dev/build/source

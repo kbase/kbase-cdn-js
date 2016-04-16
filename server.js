@@ -11,9 +11,9 @@ var pathExists = require('path-exists');
 
 function determineRootDir(state) {
     return Promise.try(function () {
-        console.log('determine root dir');
-        var rootDir = path.normalize(['src', 'cdn'].join('/'));
-        state.rootDir = rootDir;
+//        var rootDir = path.normalize(['src', 'cdn'].join('/'));
+//        state.rootDir = rootDir;
+        state.rootDir = state.args.dir || state.config.server.root;
         return state;
     });
     
@@ -47,7 +47,7 @@ function loadConfig(state) {
 
 function start(state) {
     var port = state.config.server.port,
-        title = 'kbup-' + String(port);
+        title = 'kbcdn-' + String(port);
 
     console.log('Starting local CDN server');
     console.log('Directory : ' + state.rootDir);
@@ -76,7 +76,7 @@ function getServerPid(port) {
     var title;
     return execAsync('ps -o pid,command')
         .then(function (stdout, stderr) {
-            title = 'kbup-' + String(port);
+            title = 'kbcdn-' + String(port);
             return stdout.toString()
                 .split('\n')
                 .map(function (item) {
@@ -106,8 +106,8 @@ function getServerPid(port) {
 
 function stop(state) {
     // yeah, well, we'll improve this...
-    console.log('Stopping server on port ' + state.config.build.server.port);
-    getServerPid(state.config.build.server.port)
+    console.log('Stopping server on port ' + state.config.server.port);
+    getServerPid(state.config.server.port)
         .then(function (pid) {
             console.log('PID: ' + pid);
             process.kill(pid);
@@ -134,9 +134,9 @@ function usage() {
 }
 
 function main(state) {
-    determineRootDir(state)
+        loadConfig(state)
         .then(function (state) {
-            return loadConfig(state);
+            return determineRootDir(state);
         })
         .then(function (state) {
             switch (state.args.action) {
@@ -165,9 +165,12 @@ if (action === undefined) {
     throw new Error('action required: node server <action>');
 }
 
+var dir = process.argv[3];
+
 main({
     args: {
-        action:action
+        action: action,
+        dir: dir
     },
     config: {        
     }

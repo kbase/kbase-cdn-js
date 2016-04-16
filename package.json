@@ -1,5 +1,5 @@
 {
-    "name": "kbase-ui-plugin-widget-iframe-contigset-widget",
+    "name": "kbase-cdn-js",
     "version": "0.1.0",
     "keywords": [
         "util",
@@ -12,7 +12,7 @@
     "license": "SEE LICENSE IN LICENSE.md",
     "repository": {
         "type": "git",
-        "url": "git://github.com/eapearson/kbase-ui-plugin-widget-iframe-paired-end-library-widget"
+        "url": "git://github.com/eapearson/kbase-cdn-js"
     },
     "contributors": [
         "eapearson"
@@ -25,5 +25,22 @@
         "path-exists": "2.1.0"
     },
     "devDependencies": {
+        "bluebird": "3.3.4",
+        "bower": "1.7.7",
+        "del": "2.2.0",
+        "findit2": "2.2.3",
+        "fs-extra": "0.26.7",
+        "glob": "7.0.3",
+        "ini": "1.3.4",
+        "jasmine": "2.4.1",
+        "jasmine-core": "2.4.1",
+        "js-yaml": "3.5.5",
+        "lodash": "4.6.1",
+        "node-dir": "0.1.11",
+        "node-ini": "1.0.0",
+        "path-exists": "2.1.0",
+        "requirejs": "2.2.0",
+        "uglify-js": "2.6.2",
+        "underscore": "1.8.3"
     }
 }
