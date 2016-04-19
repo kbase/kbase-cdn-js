@@ -1,0 +1,43 @@
+<html>
+    <head>
+        <title>CDN Test</title>
+    </head>
+    <body>
+        <div id="main"></div>
+        <script>
+            var require = {
+                baseUrl: 'js',
+                paths: {
+                    jquery: '//cdn.kbase.us/jquery/2.2.2/jquery',
+                    bluebird: '//cdn.kbase.us/bluebird/3.3.4/bluebird',
+                    kb_service: '//cdn.kbase.us/kbase-service-clients-js/1.4.0'
+                }
+            };
+        </script>
+        <script src='//cdn.kbase.us/requirejs/2.2.0/require.js'></script>
+        <script>
+            require([
+                'jquery',
+                'kb_service/client/workspace'
+            ], function ($, Workspace) {
+                var workspace = new Workspace('https://ci.kbase.us/services/ws'),
+                    objectRef = '6312/14/2';
+                workspace.get_object_info_new({
+                    objects: [{
+                            ref: objectRef
+                        }],
+                    includeMetadata: 1
+                })
+                    .then(function (data) {
+                        $('#main').html('Hi, you asked for object with ref id <b>' + objectRef +
+                            '</b>, which is named <b>' + data[0][1] + '</b> and of type <i>' +
+                            data[0][2] + '</i>.');
+                    })
+                    .catch(function (err) {
+                        $('#main').html(err.error.message);
+                        console.error('ERROR', err);
+                    });
+            });
+        </script>
+    </body>
+</html>
