@@ -6,7 +6,7 @@
 /*
  * build
  * make build dir
- * load the libraries.yml file
+ * load the packages.yml file
  * for each package
  * for each version
  * create a temp dir
@@ -28,19 +28,10 @@
 
     var Promise = require('bluebird'),
         fs = Promise.promisifyAll(require('fs-extra')),
-        pathExists = require('path-exists'),
         yaml = require('js-yaml'),
         glob = Promise.promisify(require('glob').Glob);
 
 // UTILS
-
-    function loadYaml(yamlPath) {
-        return fs.readFileAsync(yamlPath.join('/'), 'utf8')
-            .then(function (contents) {
-                return yaml.safeLoad(contents);
-            });
-    }
-    
     function makeDist(state) {
         return fs.removeAsync(state.distDir)
             .then(function () {

@@ -80,7 +80,6 @@
         return prefix + String(uniqState[prefix]);
     }
 
-
     function copyFiles2(dir, file, destDir, options) {
         var fromPath = [dir, file].join('/'),
             filePath = file.split('/'),
@@ -138,8 +137,8 @@
                 if (packageOptions) {
                     if (packageOptions.removeAllPath) {
                         removeAllPath = true;
-                    } else if (packageOptions.removePath) {
-                        removePath = packageOptions.removePath;
+                    } else if (packageOptions.startPath) {
+                        removePath = packageOptions.startPath;
                     }
                 }
                 if (typeof main === 'string') {
@@ -201,15 +200,15 @@
                     }));
             });
     }
-    /*
-     *
-     */
+
     function installBowerPackage(packageDef, state) {
         var buildBase = state.buildDir,
             tempPath = [buildBase, 'temp', uniq('temp_')].join('/'),
-            packageName = packageDef.package || packageDef.name,
+            packageName = packageDef.packageRef || packageDef.name,
             packageString = packageName + '#' + packageDef.bowerVersion,
             destDir = [state.buildDir, 'source', packageDef.name, packageDef.cdnVersion].join('/');
+
+        state.destDir = destDir;
 
         return Promise.try(function () {
             console.log('Installing package ' + packageName);
@@ -262,11 +261,11 @@
             });
     }
 
-
-    function installLibraries(state) {
+    function installPackages(state) {
         var toInstall = [];
-        state.libraries.bower.forEach(function (library) {
-            library.versions.forEach(function (version) {
+        state.packageDb = {};
+        state.packages.forEach(function (packageConfig) {
+            packageConfig.versions.forEach(function (version) {
                 var packageDef;
                 if (typeof version === 'string') {
                     packageDef = {
@@ -279,22 +278,104 @@
                         cdnVersion: version.cdn
                     };
                 }
-                packageDef.name = library.name;
-                if (library.installedDirectory) {
-                    packageDef.installedDirectory = library.installedDirectory;
+                packageDef.name = packageConfig.name;
+                if (packageConfig.installedDirectory) {
+                    packageDef.installedDirectory = packageConfig.installedDirectory;
                 }
-                if (library.install) {
-                    packageDef.install = library.install;
+                if (packageConfig.install) {
+                    packageDef.install = packageConfig.install;
                 }
-                if (library.package) {
-                    packageDef.package = library.package;
+                if (packageConfig.packageRef) {
+                    packageDef.packageRef = packageConfig.packageRef;
                 }
+                state.packageDb[[packageConfig.name, packageDef.cdnVersion].join('/')] = packageDef;
                 toInstall.push(packageDef);
             });
         });
         return Promise.all(toInstall.map(function (install) {
             return installBowerPackage(install, state);
         }))
+            .then(function () {
+                return state;
+            });
+    }
+
+    function getModulePath(state, packageName, packageVersion, modulePath, moduleExtension) {
+        var packageSpec = state.packageDb[[packageName, packageVersion].join('/')],
+            packageDir;
+
+        if (packageSpec === undefined) {
+            throw new Error('Cannot find package spec for ' + packageName + ', ' + packageVersion);
+        }
+        packageDir = packageName;
+        
+        //if (packageName === 'plotly') {
+         //   console.log('PACKAGE DIR', packageSpec);
+        //}
+
+        var path = [packageDir, packageVersion, modulePath]
+            .filter(function (x) {
+                if (x) {
+                    return true;
+                }
+                return false;
+            })
+            .join('/'),
+            fullPath = [state.buildDir, 'source', path].join('/');
+
+        // cute little hack
+        if (modulePath) {
+            fullPath += '.' + (moduleExtension || 'js');
+        }
+
+        return pathExists(fullPath)
+            .then(function (exists) {
+                if (!exists) {
+                    throw new Error('Module path not found for ' + packageName + ', ' + packageVersion + ', ' + fullPath);
+                }
+            })
+            .then(function () {
+                return path;
+            });
+    }
+
+    function generateAMD(state) {
+        return Promise.try(function () {
+            state.amdRuntimes = {};
+
+            return Promise.all(state.amd.map(function (amdSpec) {
+                var amdConfig = {
+                    paths: {},
+                    shim: {}
+                };
+                state.amdRuntimes[amdSpec.version] = amdConfig;
+                return Promise.all(Object.keys(amdSpec.paths).map(function (amdPathName) {
+                    // determine path for the amdSpec
+                    var pathSpec = amdSpec.paths[amdPathName];
+
+                    return getModulePath(state, pathSpec[0], pathSpec[1], pathSpec[2], pathSpec[3])
+                        .then(function (path) {
+                            amdConfig.paths[amdPathName] = path;
+                        });
+                }))
+                    .then(function () {
+                        // Now do the dependencies.
+                        Object.keys(amdSpec.deps).forEach(function (amdPathName) {
+                            amdConfig.shim[amdPathName] = {deps: amdSpec.deps[amdPathName]};
+                        });
+                    })
+                    .then(function () {
+                        // write amd config into the cdn!
+                        var path = [state.buildDir, 'source', 'kbase-amd', amdSpec.version],
+                            fileName = 'require-config.json';
+                            
+                        return fs.ensureDirAsync(path.join('/'))
+                            .then(function () {
+                                return fs.writeFileAsync(path.concat([fileName]).join('/'), JSON.stringify(amdConfig, null, '   '));
+                            });
+                    });
+            }));
+        })
             .then(function () {
                 return state;
             });
@@ -312,14 +393,18 @@
                 return ensureBuildEnv(state);
             })
             .then(function (state) {
-                return loadYaml(['libraries.yml'])
-                    .then(function (libraries) {
-                        state.libraries = libraries;
+                return loadYaml(['packages.yml'])
+                    .then(function (packagesConfig) {
+                        state.packages = packagesConfig.packages;
+                        state.amd = packagesConfig.amd;
                         return state;
                     });
             })
             .then(function (state) {
-                return installLibraries(state);
+                return installPackages(state);
+            })
+            .then(function (state) {
+                return generateAMD(state);
             })
             .then(function (state) {
                 return cleanup(state);

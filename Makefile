@@ -3,6 +3,7 @@
 clean:
 	@echo "> Removing all build artifacts"
 	rm -rf dev/build
+	rm -rf dist
 
 build: 
 	@echo "> Building the current state of the CDN"
