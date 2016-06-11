@@ -38,7 +38,7 @@ packages:
         versions: [4.3.0, 4.4.0, 4.5.0]
     -
         name: google-code-prettify
-        versions: [{bower: eapearson/google-code-prettify#1.1.0, cdn: 1.1.0}]
+        versions: [{bower: eapearson/google-code-prettify#1.1.0, cdn: 1.2.0}]
         install:
             startPath: distrib/amd
     -
