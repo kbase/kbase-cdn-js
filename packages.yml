@@ -37,6 +37,11 @@ packages:
         name: font-awesome
         versions: [4.3.0, 4.4.0, 4.5.0]
     -
+        name: google-code-prettify
+        versions: [{bower: eapearson/google-code-prettify#1.1.0, cdn: 1.1.0}]
+        install:
+            startPath: distrib/amd
+    -
         name: handlebars
         versions: [4.0.5]
     -
@@ -139,7 +144,7 @@ packages:
         install:
             method: custom
             startPath: src
-            files: ['*.js']
+            files: ['*.js']    
 amd:
     -
         version: '0.1.0'
@@ -193,6 +198,7 @@ amd:
             datatables_bootstrap: [datatables-bootstrap3-plugin, 0.4.0, js/datatables-bootstrap3]
             datatables_bootstrap_css: [datatables-bootstrap3-plugin, 0.4.0, css/datatables-bootstrap3, css]
             'font-awesome': [font-awesome, 4.3.0, css/font-awesome, css]
+            # 'google-code-prettify': [google-code-prettify, 1.0.4, google-code-prettify]
             handlebars: [handlebars, 4.0.5, handlebars]
             highlight: [highlightjs, 9.2.0, highlight.pack]
             highlight_css: [highlightjs, 9.2.0, styles/default, css]

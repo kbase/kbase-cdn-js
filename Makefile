@@ -1,5 +1,7 @@
 # Makefile for kbase-cdn-js
 
+all: clean build dist
+
 clean:
 	@echo "> Removing all build artifacts"
 	rm -rf dev/build

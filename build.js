@@ -101,7 +101,6 @@
                 // return fs.ensureDirAsync(destPath);
             })
             .then(function () {
-                // console.log('COPY', fromPath, destPath, options);
                 return fs.copyAsync(fromPath, destFilePath, {clobber: false});
             })
             .catch(function (err) {
@@ -161,6 +160,17 @@
                                 return true;
                             })
                             .map(function (file) {
+                                // Normalize file names.
+                                return file.split('/')
+                                    .filter(function (element) {
+                                        if (element === '' || element === '.') {
+                                            return false;
+                                        }
+                                        return true;
+                                    })
+                                    .join('/');
+                            })
+                            .map(function (file) {
                                 return copyFiles2(packageDir, file, destDir, {
                                     justFile: removeAllPath,
                                     removePrefix: removePath ? removePath.split('/').length : false
@@ -205,8 +215,19 @@
         var buildBase = state.buildDir,
             tempPath = [buildBase, 'temp', uniq('temp_')].join('/'),
             packageName = packageDef.packageRef || packageDef.name,
-            packageString = packageName + '#' + packageDef.bowerVersion,
+            packageString,
             destDir = [state.buildDir, 'source', packageDef.name, packageDef.cdnVersion].join('/');
+
+        // Accomodate specific github repos.
+        // TODO: we use the capturing groups for now because we may use this
+        // info to validate. E.g. at least the branch/tag should match the 
+        // bower version; or perhaps we should insist that semver be used.
+        if (packageDef.bowerVersion.match(/^(.+?)\/(.+?)#(.+)$/)) {
+            packageString = packageDef.bowerVersion;
+        } else {
+            packageString = packageName + '#' + packageDef.bowerVersion;
+        }
+
 
         state.destDir = destDir;
 
@@ -308,10 +329,6 @@
             throw new Error('Cannot find package spec for ' + packageName + ', ' + packageVersion);
         }
         packageDir = packageName;
-        
-        //if (packageName === 'plotly') {
-         //   console.log('PACKAGE DIR', packageSpec);
-        //}
 
         var path = [packageDir, packageVersion, modulePath]
             .filter(function (x) {
@@ -368,7 +385,7 @@
                         // write amd config into the cdn!
                         var path = [state.buildDir, 'source', 'kbase-amd', amdSpec.version],
                             fileName = 'require-config.json';
-                            
+
                         return fs.ensureDirAsync(path.join('/'))
                             .then(function () {
                                 return fs.writeFileAsync(path.concat([fileName]).join('/'), JSON.stringify(amdConfig, null, '   '));
