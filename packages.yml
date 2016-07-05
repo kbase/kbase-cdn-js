@@ -4,7 +4,7 @@
 packages:
     - 
         name: bluebird
-        versions: [3.3.4]
+        versions: [3.3.4, 3.4.1]
         install:
             startPath: js/browser
     - 
@@ -113,7 +113,7 @@ packages:
         versions: [1.8.3]
     -
         name: kbase-common-js
-        versions: [1.5.3, 1.5.4, 1.7.0]
+        versions: [1.5.3, 1.5.4, 1.7.0, 1.9.0]
         install: 
             method: custom
             startPath: dist/kb/common
@@ -121,7 +121,7 @@ packages:
             exclude: [typeManager_old.js]                
     -
         name: kbase-ui-widget
-        versions: [1.0.7]
+        versions: [1.0.7, 1.0.8]
         install: 
             method: custom
             startPath: src/kb/widget
