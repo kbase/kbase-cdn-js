@@ -29,7 +29,8 @@
     var Promise = require('bluebird'),
         fs = Promise.promisifyAll(require('fs-extra')),
         yaml = require('js-yaml'),
-        glob = Promise.promisify(require('glob').Glob);
+        glob = Promise.promisify(require('glob').Glob),
+        path = require('path');
 
 // UTILS
     function makeDist(state) {
@@ -59,7 +60,8 @@
                 return glob([dest, '**', '*.js'].join('/'))
                     .then(function (matches) {
                         return Promise.all(matches.map(function (match) {
-                            var result = uglify.minify(match, {outSourceMap: 'out.js.map'});
+                            var fileName = path.basename(match),
+                                result = uglify.minify(match, {outSourceMap: fileName + '.map'});
                             return fs.writeFileAsync(match, result.code)
                                 .then(function () {
                                     fs.writeFileAsync(match + '.map', result.map);
