@@ -35,7 +35,16 @@ packages:
             startPath: media
     -
         name: font-awesome
-        versions: [4.3.0, 4.4.0, 4.5.0]
+        versions: [4.3.0]
+    -
+        name: font-awesome
+        versions: [4.4.0, 4.5.0]
+        install:
+            method: custom
+            files: 
+                - css/font-awesome.css
+                - fonts/*
+            
     -
         name: google-code-prettify
         versions: [{bower: eapearson/google-code-prettify#1.1.0, cdn: 1.2.0}]
