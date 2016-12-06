@@ -1,6 +1,15 @@
 # Makefile for kbase-cdn-js
 
-all: clean build dist
+TARGET ?= /kb/deployment
+SERVICE_NAME = cdnjs
+
+all: clean init build dist
+	
+deploy:
+	@echo "> Deploying to "
+	@echo ">  $(TARGET)/services/$(SERVICE_NAME)"
+	mkdir -p  $(TARGET)/services/$(SERVICE_NAME)/files
+	cp -pr dist/bin/*  $(TARGET)/services/$(SERVICE_NAME)/files
 
 clean:
 	@echo "> Removing all build artifacts"
@@ -15,10 +24,6 @@ dist:
 	@echo "> Building the distribution"
 	node dist
 
-start:
-	@echo "> Starting the example server"
-	node server start $(dir) &
-	
 quick:
 	@echo "> Doing a quick clean, build, start"
 	clean
@@ -28,6 +33,10 @@ quick:
 init:
 	@echo "> Initialiing the repo for work"
 	npm install
+	
+start:
+	@echo "> Starting the example server"
+	node server start $(dir) &
 	
 stop: 
 	@echo "> Stopping the example server"
