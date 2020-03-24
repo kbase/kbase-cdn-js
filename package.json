@@ -26,7 +26,7 @@
     },
     "devDependencies": {
         "bluebird": "3.3.4",
-        "bower": "1.7.7",
+        "bower": "1.8.8",
         "del": "2.2.0",
         "findit2": "2.2.3",
         "fs-extra": "0.26.7",
